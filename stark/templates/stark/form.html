@@ -1,0 +1,34 @@
+ <form method="post" novalidate class="form-horizontal">
+    {% csrf_token %}
+    {% for dic in form %}
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">{{ dic.item.field.label }}</label>
+        <div class="col-sm-10" style="position: relative">
+          {{ dic.item }}
+          {% if dic.is_popup %}
+              <div style="position: absolute;right: -8px;top: 10px;">
+                <a  onclick="popUp('{{ dic.popup_url }}')" class="glyphicon glyphicon-search" aria-hidden="true"></a>
+              </div>
+          {% endif %}
+          {{ dic.item.errors.0 }}
+        </div>
+      </div>
+    {% endfor %}
+    <div class="col-sm-offset-11 col-sm-1">
+        <input class="btn btn-primary" type="submit" value="提交">
+    </div>
+</form>
+
+<script>
+    function popupCallback(dic) {
+        var op = document.createElement('option');
+        op.value = dic.id;
+        op.text = dic.text;
+        op.setAttribute('selected','selected');
+        document.getElementById(dic.popbackid).appendChild(op);
+
+    }
+    function popUp(url) {
+        var popupPage = window.open(url, url, "status=1, height:500, width:600, toolbar=0, resizeable=0");
+    }
+</script>

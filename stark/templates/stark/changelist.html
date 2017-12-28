@@ -1,0 +1,111 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static "stark/bootstrap/css/bootstrap.css" %}" />
+    <style>
+        .list-filter a{
+            display: inline-block;
+            padding: 3px 6px;
+            border: 1px solid #2e6da4;
+            margin: 3px 0;
+        }
+        .list-filter a.active{
+            background-color: #2e6da4;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>列表页面</h1>
+        <div class="list-filter">
+            {% for comb in self.gen_comb_filter %}
+                <div>
+                    {% for item in comb %}
+                        {{ item }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 ">
+
+
+                    <div class="pull-right">
+                        {% if self.show_add_btn %}
+                            <a class="btn btn-primary" href="{{ self.add_url }}">增加</a>
+                        {% endif %}
+                    </div>
+
+
+
+                   <div class="pull-right" style="margin-right: 530px">
+                        {% if self.show_search_form %}
+                            <form action="" method="get">
+                                <input name="{{ self.search_key }}" value="{{ self.search_form_val }}" type="text"   class="form-control" style="display: inline-block;width: 200px" >
+
+                                <button class="btn btn-primary"><span class="glyphicon glyphicon-search" ></span></button>
+                            </form>
+                       {% endif %}
+                    </div>
+
+
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {% if self.actions %}
+                        <div class="form-group">
+                            <select name="list_action" class="form-control" style="display: inline-block;width: 200px">
+                                    <option value=''>请选择action</option>
+                                {% for item in self.modify_actions %}
+                                    <option value="{{ item.name }}">{{ item.text }}</option>
+                                {% endfor %}
+
+                            </select>
+                            <button class="btn btn-primary">执行</button>
+                        </div>
+                        {% endif %}
+                        <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                {% for item in self.head_list %}
+                                    <th>{{ item }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obj in self.body_list %}
+                                <tr>
+                                    {% for col in obj %}
+                                        <td>{{ col }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+
+
+    <nav aria-label="Page navigation" class="pull-right" >
+        <ul class="pagination">
+        {{ self.page_obj.page_html|safe }}
+        </ul>
+    </nav>
+
+    </div>
+</body>
+</html>
+
